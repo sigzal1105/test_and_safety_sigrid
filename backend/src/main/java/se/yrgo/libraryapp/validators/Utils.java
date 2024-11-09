@@ -17,6 +17,10 @@ class Utils {
      * @return a string with all non-letters removed (except whitespace)
      */
     static String onlyLettersAndWhitespace(String str) {
+        if (str == null) {
+            return "";
+        }
+
         return str.chars().filter(cp -> Character.isLetter(cp) || Character.isWhitespace(cp))
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString().toLowerCase();
@@ -32,6 +36,10 @@ class Utils {
      */
     static String cleanAndUnLeet(String str) {
         final var leetMap = Map.of('1', 'l', '3', 'e', '4', 'a', '5', 's', '6', 'b', '7', 't', '8', 'b', '0', 'o');
+
+        if (str == null) {
+            return "";
+        }
 
         final StringBuilder res = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
