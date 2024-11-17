@@ -45,12 +45,14 @@ public class UserDao {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(
                         "SELECT id, password_hash FROM user WHERE user = '" + user + "'")) {
+
             if (rs.next()) {
                 int id = rs.getInt("id");
                 UserId userId = UserId.of(id);
                 String passwordHash = rs.getString("password_hash");
                 return Optional.of(new LoginInfo(userId, passwordHash));
             }
+
         } catch (SQLException ex) {
             logger.error("Unable to get user " + user, ex);
         }
@@ -105,8 +107,7 @@ public class UserDao {
             if (userId.getId() > 0 && addToUserRole(conn, userId)) {
                 conn.commit();
                 return true;
-            }
-            else {
+            } else {
                 conn.rollback();
                 return false;
             }

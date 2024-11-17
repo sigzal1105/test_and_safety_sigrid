@@ -57,6 +57,8 @@ class UserDaoTest {
         UserDao userDao = new UserDao(ds);
         
         assertThat(userDao.getLoginInfo(username)).isEmpty();
+        assertThat(userDao.getLoginInfo(null)).isEmpty();
+
     }
 
     @Test
@@ -91,5 +93,8 @@ class UserDaoTest {
         UserDao userDao = new UserDao(ds);
 
         assertThat(userDao.get(username)).isEmpty();
+        assertThat(userDao.get(null)).isEmpty();
+
+
     }
 }
