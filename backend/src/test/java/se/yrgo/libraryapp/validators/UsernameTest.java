@@ -2,6 +2,7 @@ package se.yrgo.libraryapp.validators;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -19,5 +20,10 @@ class UsernameTest {
     @EmptySource
     void invalidUsername(String invalidName) {
         assertThat(Username.validate(invalidName)).isFalse();
+    }
+
+    @Test
+    void nullReturnsFalse() {
+        assertThat(Username.validate(null)).isFalse();
     }
 }

@@ -8,16 +8,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class RealNameTest {
 
+    @Disabled
     @ParameterizedTest
     @ValueSource (strings = {"balderdash", "blimey", "bullspit", "damn", "darn", "drat", "frack", "frick", "heck", "shiet"})
     void isValidName(String str) {
         
         assertThat(RealName.validate(str)).isTrue();
     }
-   
+
+    //@Disabled
     @ParameterizedTest
     @ValueSource (strings = {"balderdash", "blimey", "bullspit", "damn", "darn", "drat", "frack", "frick", "heck", "shiet"})
-    void isNorValidName(String str) {
+    void isNotValidName(String str) {
         
         assertThat(RealName.validate(str)).isFalse();
     }
