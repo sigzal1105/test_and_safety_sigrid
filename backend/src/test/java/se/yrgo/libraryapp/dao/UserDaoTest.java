@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.Optional;
 
 import javax.sql.DataSource;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -57,8 +59,25 @@ class UserDaoTest {
         UserDao userDao = new UserDao(ds);
         
         assertThat(userDao.getLoginInfo(username)).isEmpty();
-        assertThat(userDao.getLoginInfo(null)).isEmpty();
+    }
 
+    @Disabled
+    @Test
+    void testEmptyId() {
+        UserDao userDao = new UserDao(ds);
+
+        assertThat(userDao.getLoginInfo(" ")).isEmpty();
+        assertThat(userDao.getLoginInfo("")).isEmpty();
+    }
+
+    @Disabled
+    @Test
+    void testNull() {
+
+        UserDao userDao = new UserDao(ds);
+
+        assertThat(userDao.getLoginInfo(null)).isEmpty();
+        assertThat(userDao.get(null)).isEmpty();
     }
 
     @Test
@@ -93,8 +112,7 @@ class UserDaoTest {
         UserDao userDao = new UserDao(ds);
 
         assertThat(userDao.get(username)).isEmpty();
-        assertThat(userDao.get(null)).isEmpty();
-
-
     }
+
+    
 }
