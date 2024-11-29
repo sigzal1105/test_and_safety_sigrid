@@ -1,6 +1,7 @@
 package integrations.pages;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -30,8 +31,8 @@ public class StartPage {
 
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
-        //final WebElement dropdown = Utils.find(driver, By.className("dropdown"));
-        //wait.until(CustomConditions.elementHasBeenClicked(dropdown));
+        // final WebElement dropdown = Utils.find(driver, By.className("dropdown"));
+        // wait.until(CustomConditions.elementHasBeenClicked(dropdown));
 
         final WebElement search = Utils.find(driver, By.linkText("Search"));
         wait.until(CustomConditions.elementHasBeenClicked(search));
