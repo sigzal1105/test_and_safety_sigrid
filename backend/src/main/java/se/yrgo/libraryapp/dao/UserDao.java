@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import se.yrgo.libraryapp.entities.*;
 
@@ -41,16 +40,22 @@ public class UserDao {
     }
 
     public Optional<LoginInfo> getLoginInfo(String user) {
+        if (user == null) {
+            return Optional.empty();
+        }
+
         try (Connection conn = ds.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(
                         "SELECT id, password_hash FROM user WHERE user = '" + user + "'")) {
+
             if (rs.next()) {
                 int id = rs.getInt("id");
                 UserId userId = UserId.of(id);
                 String passwordHash = rs.getString("password_hash");
                 return Optional.of(new LoginInfo(userId, passwordHash));
             }
+
         } catch (SQLException ex) {
             logger.error("Unable to get user " + user, ex);
         }
@@ -58,13 +63,8 @@ public class UserDao {
         return Optional.empty();
     }
 
-    public boolean register(String name, String realname, String password) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
-        String passwordHash = encoder.encode(password);
-
-        // handle names like Ian O'Toole
-        realname = realname.replace("'", "\\'");
-
+    public boolean register(String name, String realname, String passwordHash) {
+     
         try (Connection conn = ds.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -105,8 +105,7 @@ public class UserDao {
             if (userId.getId() > 0 && addToUserRole(conn, userId)) {
                 conn.commit();
                 return true;
-            }
-            else {
+            } else {
                 conn.rollback();
                 return false;
             }

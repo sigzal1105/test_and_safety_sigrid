@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import java.sql.*;
-import java.util.Optional; //idk
+import java.util.Optional;
 
 import javax.sql.DataSource;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -35,8 +37,11 @@ class UserDaoTest {
         when(rs.next()).thenReturn(true, false);
         when(rs.getInt("id")).thenReturn(id.getId());
         when(rs.getString("password_hash")).thenReturn(passwordHash);
+
+
         UserDao userDao = new UserDao(ds);
         LoginInfo info = userDao.getLoginInfo(username).get();
+
         assertThat(info.getUserId()).isEqualTo(id);
         assertThat(info.getPasswordHash()).isEqualTo(passwordHash);
     }
@@ -49,8 +54,29 @@ class UserDaoTest {
         when(conn.createStatement()).thenReturn(stmt);
         when(stmt.executeQuery(contains(username))).thenReturn(rs);
         when(rs.next()).thenReturn(false);
+
         UserDao userDao = new UserDao(ds);
+        
         assertThat(userDao.getLoginInfo(username)).isEmpty();
+    }
+
+    @Disabled
+    @Test
+    void testEmptyId() {
+        UserDao userDao = new UserDao(ds);
+
+        assertThat(userDao.getLoginInfo(" ")).isEmpty();
+        assertThat(userDao.getLoginInfo("")).isEmpty();
+    }
+
+    @Disabled
+    @Test
+    void testNull() {
+
+        UserDao userDao = new UserDao(ds);
+
+        assertThat(userDao.getLoginInfo(null)).isEmpty();
+        assertThat(userDao.get(null)).isEmpty();
     }
 
     @Test
@@ -66,7 +92,9 @@ class UserDaoTest {
         when(rs.next()).thenReturn(true, false);
         when(rs.getString("user")).thenReturn(username);
         when(rs.getString("realname")).thenReturn(realname);
+
         UserDao userDao = new UserDao(ds);
+
         assertThat(userDao.get(userId)).isEqualTo(Optional.of(expectedUser));
     }
 
@@ -77,7 +105,11 @@ class UserDaoTest {
         when(conn.createStatement()).thenReturn(stmt);
         when(stmt.executeQuery(anyString())).thenReturn(rs);
         when(rs.next()).thenReturn(false);
+
         UserDao userDao = new UserDao(ds);
+
         assertThat(userDao.get(username)).isEmpty();
     }
+
+    
 }
